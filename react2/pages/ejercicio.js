@@ -1,4 +1,3 @@
-import React from 'react'
 import { useState } from 'react'
 
 const ProgramaListadoAlumnos = () => {
@@ -6,6 +5,8 @@ const ProgramaListadoAlumnos = () => {
   const listaDatos = ["Ana","Bernat","Carol","David","Elena","Francesc"]
   const [nombre, setNombre] = useState('')
   const [listaAlumnos, setListaAlumnos] = useState(listaDatos)
+  const empiezaLetra = (cadena) => /^[a-zA-Z]/.test(cadena)
+  const noestaVacio = (cadena) => cadena.trim() !=0
 
   const mostrar = (lista) => {
     const lista_formato = lista.map((elemento, index) => {
@@ -16,14 +17,15 @@ const ProgramaListadoAlumnos = () => {
 
   const agregarAlumno = e => {
     e.preventDefault()
-    if(!nombre.trim()){
-      console.log('Campo vacío')
-      return
+    if (noestaVacio(nombre) && empiezaLetra(nombre)){
+      setListaAlumnos([
+        ...listaAlumnos, nombre
+      ])
+      setNombre('')
     }
-    setListaAlumnos([
-      ...listaAlumnos, nombre
-    ])
-    setNombre('')
+    else {
+      alert('Dato no válido')
+    }
   }
 
   return (
@@ -38,6 +40,7 @@ const ProgramaListadoAlumnos = () => {
         placeholder="Introduce nuevo alumno"
         onChange={e => setNombre(e.target.value)}
         value={nombre}
+        maxLength="10"
         />
       </form>
     </div>
