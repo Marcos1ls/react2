@@ -1,9 +1,23 @@
 import React from 'react'
 import { useState } from 'react'
 import { Button } from '@material-ui/core'
+import shortid from 'shortid'
+
 
 const ProgramaListadoAlumnos = () => {
-  const listaDatos = ["Ana", "Bernat", "Carol", "David", "Elena", "Francesc"]
+  const listaDatos = [
+    {
+      "id":'43DNI',
+      "nombre":'Ana',
+      "apellido":'García'
+    },
+    {
+      "id":'59DNI',
+      "nombre":'Bernat',
+      "apellido":'Palomera'
+    }
+  ]
+
   const [nombre, setNombre] = useState('')
   const [listaAlumnos, setListaAlumnos] = useState(listaDatos)
 
@@ -13,25 +27,32 @@ const ProgramaListadoAlumnos = () => {
   const mostrar = (lista) => {
     const lista_formato = lista.map((elemento, index) => {
       return <div>
-        <li>{index} - <b>{elemento}</b></li>
-      </div>
+                <li key={index}>
+                  <b>{index} - {elemento.id}</b> - {elemento.nombre}:<b> </b> 
+                  
+                  <Button variant="outlined" color="primary" onClick={() => eliminarAlumno(elemento.id)}>
+                    Eliminar
+                  </Button>
+                </li>
+            </div>
     })
     return lista_formato
   }
 
-  const eliminarAlumno = () => {
-    console.log(nombre)
-    const arrayFiltrado = listaAlumnos.filter(alumno => alumno !== `${nombre}`)
-    console.log(arrayFiltrado)
+  const eliminarAlumno = (id) => {
+    const arrayFiltrado = listaAlumnos.filter(alumno => alumno.id !== id)
     setListaAlumnos(arrayFiltrado)
   }
 
   const agregarAlumno = e => {
     e.preventDefault()
     const validar = noestaVacio(nombre) && empiezaLetra(nombre)
-
-    validar && setListaAlumnos([
-      ...listaAlumnos, nombre
+    validar && setListaAlumnos([...listaAlumnos,
+      {
+        id: shortid.generate(),
+        nombre: nombre,
+        apellido: "apellido"
+      }
     ])
 
     validar && setNombre('')
@@ -40,7 +61,7 @@ const ProgramaListadoAlumnos = () => {
   
   return (
     <div>
-      <h2>Lista de Alumnos</h2>
+      <h1>Lista de Alumnos</h1>
       <ul>
         {mostrar(listaAlumnos)}
       </ul>
@@ -52,9 +73,6 @@ const ProgramaListadoAlumnos = () => {
         value={nombre}
         />
       </form>
-      <Button onClick={() => eliminarAlumno()}>
-        Eliminar
-      </Button>
   </div>
   )
 }
